@@ -7,7 +7,7 @@ from django.shortcuts import render, HttpResponse,redirect
 #     template = loader.get_template('csrf_failure.html')
 #     return HttpResponseForbidden(template.render())
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth import login_required
 # @login_required(login_url='log')
 
@@ -45,7 +45,10 @@ def LoginPage(request):
 
 
 
-
+def Logout(request):
+    logout(request)
+    return redirect('signup')
+    # return render(request,'home.html')
 
 
 

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
     <style>
+        /* Your CSS styles here */
         body {
             font-family: Arial, sans-serif;
             background-color: #000;
@@ -19,8 +19,8 @@
         }
         
         .container {
-            max-width: 600px;
-            padding: 100px;
+            max-width: 2500px;
+            padding: 70px;
             background-color: #333;
             border-radius: 100px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
@@ -44,7 +44,7 @@
         }
         
         button {
-            padding: 1px 10px;
+            padding: 1px 8px;
             font-size: 16.5px;
             background-color: #05c46b; 
             color: #fff;
@@ -59,37 +59,37 @@
         }
         
         ul {
+            max-height: 400px; /* Maximum height for the task list */
+            overflow-y: auto; /* Enable vertical scrolling */
             padding: 0;
             list-style: none;
             text-align: left;
         }
         
         li {
-            margin: 10px 0;
+            margin: 10px 110;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
+            padding: 3px;
             background-color: #050505; 
             color: #fff;
             border-radius: 105px;
-            max-height: 400px; 
             word-wrap: break-word;
             font-size: 20px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         }
         
         .completed {
-            background-color: #da2e2e; 
+            background-color: #994646; 
         }
         input[type="checkbox"] {
-            margin-right: 10px;
+            margin-right: 0px;
         }
         
         .completed .task-text {
             text-decoration: line-through;
         }
-        
         
         .remove {
             background-color: #4e4847;
@@ -105,11 +105,11 @@
             background-color: #696362;
         }
         .task-priority {
-            font-size: 14px;
-            padding: 2px 6px;
+            font-size: 10px;
+            padding: 2px 2px;
             border: none;
             border-radius: 100px;
-            border-radius: 3px;
+            border-radius: 300px;
             color: #fff;
             font-weight: bold;
             text-transform: uppercase;
@@ -127,7 +127,21 @@
         .task-priority.low {
             background-color: #27ae60; 
         }
-        
+        .subtask-list {
+            display: none;
+        }
+        .dropdown-arrow {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-left: 2px solid #555;
+            border-bottom: 2px solid #555;
+            transform: rotate(-45deg);
+            transition: transform 0.2s;
+        }
+        .dropdown-open .dropdown-arrow {
+            transform: rotate(45deg);
+        }
     </style>
 </head>
 <body>
@@ -140,136 +154,277 @@
             <option value="medium">Medium</option>
             <option value="high">High</option>
         </select>
-        <button id="add">Add</button>
+        <button id="add">Add Task</button>
         <ul id="taskList">
             <!-- Tasks will be added here dynamically -->
         </ul>
     </div>
     <script>
         const taskInput = document.getElementById("task");
-const dueDateInput = document.getElementById("dueDate"); 
-const priorityInput = document.getElementById("priority");
-const addBtn = document.getElementById("add");
-const taskList = document.getElementById("taskList");
+        const dueDateInput = document.getElementById("dueDate");
+        const priorityInput = document.getElementById("priority");
+        const addBtn = document.getElementById("add");
+        const taskList = document.getElementById("taskList");
 
-document.addEventListener("DOMContentLoaded", () => {
-    const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    storedTasks.sort((a, b) => comparePriority(a.priority, b.priority));
-    storedTasks.forEach(taskData => {
-        addTask(taskData.text, taskData.priority, taskData.dueDate, taskData.completed);
-    });
-});
+        document.addEventListener("DOMContentLoaded", () => {
+            const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            storedTasks.sort((a, b) => comparePriority(a.priority, b.priority));
+            storedTasks.forEach(taskData => {
+                addTask(taskData.text, taskData.priority, taskData.dueDate, taskData.completed, taskData.subtasks);
+            });
+        });
 
-function comparePriority(a, b) {
-    const priorityOrder = { high: 0, medium: 1, low: 2 };
-    return priorityOrder[a] - priorityOrder[b];
-}
+        function comparePriority(a, b) {
+            const priorityOrder = { high: 0, medium: 1, low: 2 };
+            return priorityOrder[a] - priorityOrder[b];
+        }
 
-function addTask(taskText, taskPriority, dueDate, completed = false) {
-    const taskItem = document.createElement("li");
-    taskItem.innerHTML = `
-        <input type="checkbox" class="task-checkbox" ${completed ? 'checked' : ''}>
-        <span class="task-text">${taskText}</span>
-        <input type="date" class="task-due-date" value="${dueDate}">
-        <span class="task-priority ${taskPriority}">${taskPriority}</span>
-        <button class="remove">Remove</button>
-    `;
-    taskItem.className = completed ? "completed" : "";
-    taskList.appendChild(taskItem);
+        function addTask(taskText, taskPriority, dueDate, completed = false, subtasks = []) {
+            const taskItem = document.createElement("li");
+            taskItem.innerHTML = `
+                <div class="task-header">
+                    <span class="dropdown-arrow"></span>
+                    <input type="checkbox" class="task-checkbox" ${completed ? 'checked' : ''}>
+                    <span class="task-text">${taskText}</span>
+                    <input type="date" class="task-due-date" value="${dueDate}">
+                    <span class="task-priority ${taskPriority}">${taskPriority}</span>
+                    <button class="add-subtask">Add Subtask</button>
+                    <button class="remove">Remove</button>
+                </div>
+                <ul class="subtask-list">
+                    <!-- Subtasks will be added here dynamically -->
+                </ul>
+            `;
+            taskItem.className = completed ? "completed" : "";
+            taskList.appendChild(taskItem);
 
-    taskItem.querySelector('.task-checkbox').addEventListener("change", () => {
-        taskItem.classList.toggle("completed");
-        updateTaskCompletion(taskText, taskItem.classList.contains("completed"));
-        updateLocalStorage();
-    });
+            taskItem.querySelector('.task-checkbox').addEventListener("change", () => {
+                taskItem.classList.toggle("completed");
+                updateTaskCompletion(taskText, taskItem.classList.contains("completed"));
+                updateLocalStorage();
+            });
 
-    taskItem.querySelector('.task-due-date').addEventListener("change", () => {
-        updateTaskDueDate(taskText, taskItem.querySelector('.task-due-date').value);
-        updateLocalStorage();
-    });
+            taskItem.querySelector('.task-due-date').addEventListener("change", () => {
+                updateTaskDueDate(taskText, taskItem.querySelector('.task-due-date').value);
+                updateLocalStorage();
+            });
 
-    const removeBtn = taskItem.querySelector(".remove");
-    removeBtn.addEventListener("click", () => {
-        taskList.removeChild(taskItem);
-        removeTask(taskText);
-        updateLocalStorage();
-    });
+            const removeBtn = taskItem.querySelector(".remove");
+            removeBtn.addEventListener("click", () => {
+                taskList.removeChild(taskItem);
+                removeTask(taskText);
+                updateLocalStorage();
+            });
 
-    taskItem.dataset.text = taskText;
-    taskItem.dataset.priority = taskPriority;
-    taskItem.dataset.dueDate = dueDate;
-    taskItem.dataset.completed = completed;
-}
-
-function updateTaskDueDate(taskText, dueDate) {
-    const tasks = Array.from(taskList.children).map(taskItem => {
-        if (taskItem.dataset.text === taskText) {
+            taskItem.dataset.text = taskText;
+            taskItem.dataset.priority = taskPriority;
             taskItem.dataset.dueDate = dueDate;
-        }
-        return {
-            text: taskItem.dataset.text,
-            priority: taskItem.dataset.priority,
-            dueDate: taskItem.dataset.dueDate,
-            completed: taskItem.dataset.completed === "true",
-        };
-    });
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-function updateTaskCompletion(taskText, completed) {
-    const tasks = Array.from(taskList.children).map(taskItem => {
-        if (taskItem.dataset.text === taskText) {
             taskItem.dataset.completed = completed;
+            taskItem.dataset.subtasks = JSON.stringify(subtasks);
+
+            const addSubtaskBtn = taskItem.querySelector('.add-subtask');
+            const subtaskList = taskItem.querySelector('.subtask-list');
+
+            addSubtaskBtn.addEventListener("click", () => {
+                const subtaskText = prompt("Add a subtask");
+                if (subtaskText !== null && subtaskText.trim() !== "") {
+                    addSubtaskToTask(taskText, subtaskText, "low", "", false);
+                }
+            });
+
+            if (subtasks && subtasks.length > 0) {
+                subtasks.forEach(subtaskData => {
+                    addSubtaskToTask(taskText, subtaskData.text, subtaskData.priority, subtaskData.dueDate, subtaskData.completed);
+                });
+                subtaskList.style.display = "block";
+                taskItem.classList.add("dropdown-open");
+            }
+
+            taskItem.querySelector('.task-header').addEventListener("click", () => {
+                subtaskList.style.display = subtaskList.style.display === "block" ? "none" : "block";
+                taskItem.classList.toggle("dropdown-open");
+            });
         }
-        return {
-            text: taskItem.dataset.text,
-            priority: taskItem.dataset.priority,
-            dueDate: taskItem.dataset.dueDate,
-            completed: taskItem.dataset.completed === "true",
-        };
-    });
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
 
-function removeTask(taskText) {
-    const tasks = Array.from(taskList.children).filter(taskItem => taskItem.dataset.text !== taskText).map(taskItem => {
-        return {
-            text: taskItem.dataset.text,
-            priority: taskItem.dataset.priority,
-            dueDate: taskItem.dataset.dueDate,
-            completed: taskItem.dataset.completed === "true",
-        };
-    });
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+        function updateTaskDueDate(taskText, dueDate) {
+            const tasks = Array.from(taskList.children).map(taskItem => {
+                if (taskItem.dataset.text === taskText) {
+                    taskItem.dataset.dueDate = dueDate;
+                }
+                return {
+                    text: taskItem.dataset.text,
+                    priority: taskItem.dataset.priority,
+                    dueDate: taskItem.dataset.dueDate,
+                    completed: taskItem.dataset.completed === "true",
+                    subtasks: JSON.parse(taskItem.dataset.subtasks),
+                };
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
 
-function updateLocalStorage() {
-    const tasks = Array.from(taskList.children).map(taskItem => {
-        return {
-            text: taskItem.dataset.text,
-            priority: taskItem.dataset.priority,
-            dueDate: taskItem.dataset.dueDate,
-            completed: taskItem.dataset.completed === "true",
-        };
-    });
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+        function updateTaskCompletion(taskText, completed) {
+            const tasks = Array.from(taskList.children).map(taskItem => {
+                if (taskItem.dataset.text === taskText) {
+                    taskItem.dataset.completed = completed;
+                }
+                return {
+                    text: taskItem.dataset.text,
+                    priority: taskItem.dataset.priority,
+                    dueDate: taskItem.dataset.dueDate,
+                    completed: taskItem.dataset.completed === "true",
+                    subtasks: JSON.parse(taskItem.dataset.subtasks),
+                };
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
 
-addBtn.addEventListener("click", () => {
-    const taskText = taskInput.value.trim();
-    const taskPriority = priorityInput.value;
-    const dueDate = dueDateInput.value;
+        function removeTask(taskText) {
+            const tasks = Array.from(taskList.children).filter(taskItem => taskItem.dataset.text !== taskText).map(taskItem => {
+                return {
+                    text: taskItem.dataset.text,
+                    priority: taskItem.dataset.priority,
+                    dueDate: taskItem.dataset.dueDate,
+                    completed: taskItem.dataset.completed === "true",
+                    subtasks: JSON.parse(taskItem.dataset.subtasks),
+                };
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
 
-    if (taskText !== "") {
-        addTask(taskText, taskPriority, dueDate); 
-        taskInput.value = "";
-        priorityInput.value = "low";
-        dueDateInput.value = ""; 
-        updateLocalStorage();
-    }
-});
+        function updateLocalStorage() {
+            const tasks = Array.from(taskList.children).map(taskItem => {
+                return {
+                    text: taskItem.dataset.text,
+                    priority: taskItem.dataset.priority,
+                    dueDate: taskItem.dataset.dueDate,
+                    completed: taskItem.dataset.completed === "true",
+                    subtasks: JSON.parse(taskItem.dataset.subtasks),
+                };
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
 
+        function addSubtaskToTask(taskText, subtaskText, subtaskPriority, subtaskDueDate, subtaskCompleted) {
+            const taskItem = Array.from(taskList.children).find(item => item.dataset.text === taskText);
+            if (taskItem) {
+                const subtaskList = taskItem.querySelector(".subtask-list");
+                const subtaskItem = document.createElement("li");
+                subtaskItem.innerHTML = `
+                    <input type="checkbox" class="subtask-checkbox" ${subtaskCompleted ? 'checked' : ''}>
+                    <span class="subtask-text">${subtaskText}</span>
+                    <input type="date" class="subtask-due-date" value="${subtaskDueDate}">
+                    <!-- <span class="subtask-priority ${subtaskPriority}">${subtaskPriority}</span> -->
+                    <button class="remove-subtask">Remove</button>
+                `;
+                subtaskItem.className = subtaskCompleted ? "completed" : "";
+                subtaskList.appendChild(subtaskItem);
+
+                const subtasks = JSON.parse(taskItem.dataset.subtasks);
+                subtasks.push({
+                    text: subtaskText,
+                    priority: subtaskPriority,
+                    dueDate: subtaskDueDate,
+                    completed: subtaskCompleted,
+                });
+                taskItem.dataset.subtasks = JSON.stringify(subtasks);
+
+                updateLocalStorage();
+
+                subtaskItem.querySelector('.subtask-checkbox').addEventListener("change", () => {
+                    subtaskItem.classList.toggle("completed");
+                    updateSubtaskCompletion(taskText, subtaskText, subtaskItem.classList.contains("completed"));
+                    updateLocalStorage();
+                });
+
+                subtaskItem.querySelector('.subtask-due-date').addEventListener("change", () => {
+                    updateSubtaskDueDate(taskText, subtaskText, subtaskItem.querySelector('.subtask-due-date').value);
+                    updateLocalStorage();
+                });
+
+                const removeSubtaskBtn = subtaskItem.querySelector(".remove-subtask");
+                removeSubtaskBtn.addEventListener("click", () => {
+                    subtaskList.removeChild(subtaskItem);
+                    removeSubtask(taskText, subtaskText);
+                    updateLocalStorage();
+                });
+            }
+        }
+
+        function updateSubtaskCompletion(taskText, subtaskText, completed) {
+            const tasks = Array.from(taskList.children).map(taskItem => {
+                if (taskItem.dataset.text === taskText) {
+                    const subtasks = JSON.parse(taskItem.dataset.subtasks);
+                    subtasks.forEach(subtask => {
+                        if (subtask.text === subtaskText) {
+                            subtask.completed = completed;
+                        }
+                    });
+                    taskItem.dataset.subtasks = JSON.stringify(subtasks);
+                }
+                return {
+                    text: taskItem.dataset.text,
+                    priority: taskItem.dataset.priority,
+                    dueDate: taskItem.dataset.dueDate,
+                    completed: taskItem.dataset.completed === "true",
+                    subtasks: JSON.parse(taskItem.dataset.subtasks),
+                };
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        function updateSubtaskDueDate(taskText, subtaskText, dueDate) {
+            const tasks = Array.from(taskList.children).map(taskItem => {
+                if (taskItem.dataset.text === taskText) {
+                    const subtasks = JSON.parse(taskItem.dataset.subtasks);
+                    subtasks.forEach(subtask => {
+                        if (subtask.text === subtaskText) {
+                            subtask.dueDate = dueDate;
+                        }
+                    });
+                    taskItem.dataset.subtasks = JSON.stringify(subtasks);
+                }
+                return {
+                    text: taskItem.dataset.text,
+                    priority: taskItem.dataset.priority,
+                    dueDate: taskItem.dataset.dueDate,
+                    completed: taskItem.dataset.completed === "true",
+                    subtasks: JSON.parse(taskItem.dataset.subtasks),
+                };
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        function removeSubtask(taskText, subtaskText) {
+            const tasks = Array.from(taskList.children).map(taskItem => {
+                if (taskItem.dataset.text === taskText) {
+                    const subtasks = JSON.parse(taskItem.dataset.subtasks);
+                    taskItem.dataset.subtasks = JSON.stringify(subtasks.filter(subtask => subtask.text !== subtaskText));
+                }
+                return {
+                    text: taskItem.dataset.text,
+                    priority: taskItem.dataset.priority,
+                    dueDate: taskItem.dataset.dueDate,
+                    completed: taskItem.dataset.completed === "true",
+                    subtasks: JSON.parse(taskItem.dataset.subtasks),
+                };
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        addBtn.addEventListener("click", () => {
+            const taskText = taskInput.value.trim();
+            const taskPriority = priorityInput.value;
+            const dueDate = dueDateInput.value;
+
+            if (taskText !== "") {
+                addTask(taskText, taskPriority, dueDate);
+                taskInput.value = "";
+                priorityInput.value = "low";
+                dueDateInput.value = "";
+                updateLocalStorage();
+            }
+        });
     </script>
-    <!-- <script src="script.js"></script> -->
+ 
 </body>
 </html>
