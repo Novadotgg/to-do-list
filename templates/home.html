@@ -158,6 +158,8 @@
         <ul id="taskList">
             <!-- Tasks will be added here dynamically -->
         </ul>
+        <a href="{% url 'logout' %}" class="btn">Logout</a>
+
     </div>
     <script>
         const taskInput = document.getElementById("task");
@@ -231,7 +233,7 @@
                     addSubtaskToTask(taskText, subtaskText, "low", "", false);
                 }
             });
-
+//______________________________________________________________________________________________----------------------
             if (subtasks && subtasks.length > 0) {
                 subtasks.forEach(subtaskData => {
                     addSubtaskToTask(taskText, subtaskData.text, subtaskData.priority, subtaskData.dueDate, subtaskData.completed);

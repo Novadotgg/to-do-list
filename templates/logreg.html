@@ -200,7 +200,7 @@ form
           {% csrf_token %}
           <input type="text" placeholder="Username" required="" name="un" id="username">
           <input type="password" placeholder="Password" required="" name="pass" id="password">
-          <a href="#">Forgot password?</a>
+          {% comment %} <a href="#">Forgot password?</a> {% endcomment %}
           <input type="submit" value="Login">
         </form>
       </div>
