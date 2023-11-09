@@ -24,4 +24,4 @@ python manage.py makemigrations
  The create task part is contained in a container of a HTML file where the task can be added along with their respective due date and respective priority and this tasks consists of a checkbox, which when clicked marks the tasks as completed and then cuts off the whole task and then we can remove the task completely from the task list.
  ### Subtask
  The subtask button is connected along witht the task itself, so whenever any task is created we have the option to create a subtask too and we can even set the due date of the subtask itself and there exists a checkbox whch can be clicked when the subtask is completed.
- And after finishing the wholde task we can then completely cut off the main task and can remove it finaly.
+ And after finishing the wholde task we can then completely cut off the main task and can remove it finally.
