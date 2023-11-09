@@ -75,4 +75,4 @@ urlpatterns = [
  And after finishing the wholde task we can then completely cut off the main task and can remove it finally.
  And whenever the browser is refreshed the list will still be there as it's stored in the browser cache.
  ## Working
- When the user register and then logs in with the correctw credentials then he/she is redirected to the todolist site where the person can ass his/her todo list and can add subtasks too inside his/her todolist and can store them after that if they want to logout they can logout and will be redirected to the registration page.
+ When the user register and then logs in with the correctw credentials then he/she is redirected to the todolist site where the person can ass his/her todo list and can add subtasks too inside his/her todolist and can store them after that if they want to logout they can logout and will be redirected to the registration page. The data you entered or the task you entered will always be there when you reopen the project and run this in the same browser.
