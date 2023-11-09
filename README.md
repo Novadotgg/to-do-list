@@ -13,7 +13,38 @@ For running this project open the terminal and write
 ~~~
 python manage.py runserver
 ~~~
-Now we have to register our app inside the django where the app name is written in the `settings.py` file. And then we have to register our template folder in the dirs list of `settings.py`.
+Now we have to register our app inside the django where the app name is written in the `settings.py` file. Like: (in my case it was app1)
+~~~
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'app1',
+]
+~~~
+
+And then we have to register our template folder in the dirs list of `settings.py`:
+~~~
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': ['templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+~~~
 Write 
 ~~~
 python manage.py makemigrations
@@ -24,6 +55,18 @@ python manage.py makemigrations
  ~~~
 
 for making and pushing the registered user's data into the database.
+### url.py django
+This is the part where you need to specify the urls like when you click the login page os signup/registration page where should it redirect you, so you need to provide a path for the redirection, in my case I used separate for login, registration, home page:
+~~~
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('',views.SignupPage,name='signup'),
+    path('log/',views.LoginPage,name='login'),
+    path('home/',views.HomePage,name='home'),
+    path('logout/',views.Logout,name='logout'),
+]
+~~~
+
  ## To do list part
  Here the logic are made such that the todo list consists of the add task, add subtask, set due date, set priority.
  The create task part is contained in a container of a HTML file where the task can be added along with their respective due date and respective priority and this tasks consists of a checkbox, which when clicked marks the tasks as completed and then cuts off the whole task and then we can remove the task completely from the task list.
