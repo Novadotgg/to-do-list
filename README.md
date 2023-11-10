@@ -72,7 +72,11 @@ urlpatterns = [
  The create task part is contained in a container of a HTML file where the task can be added along with their respective due date and respective priority and this tasks consists of a checkbox, which when clicked marks the tasks as completed and then cuts off the whole task and then we can remove the task completely from the task list.
  ### Subtask
  The subtask button is connected along witht the task itself, so whenever any task is created we have the option to create a subtask too and we can even set the due date of the subtask itself and there exists a checkbox whch can be clicked when the subtask is completed.
- And after finishing the wholde task we can then completely cut off the main task and can remove it finally.
+ And after finishing the whole task we can then completely cut off the main task and can remove it finally.
  And whenever the browser is refreshed the list will still be there as it's stored in the browser cache.
+ The added subtask is considered to have the same priority as the main task that consisting of the subtask inside it, therefore only prioviding a due date to it works.
  ## Working
- When the user register and then logs in with the correctw credentials then he/she is redirected to the todolist site where the person can ass his/her todo list and can add subtasks too inside his/her todolist and can store them after that if they want to logout they can logout and will be redirected to the registration page. The data you entered or the task you entered will always be there when you reopen the project and run this in the same browser.
+ When the user register and then logs in with the correct credentials then he/she is redirected to the todolist site where the person can ass his/her todo list and can add subtasks too inside his/her todolist and can store them after that if they want to logout they can logout and will be redirected to the registration page. The data you entered or the task you entered will always be there when you reopen the project and run this in the same browser.
+ In the backend each and every works on the task are been updated. For e.g The local storage part the priority given, the added due date, the task completion or the check box unmarked saying that the task is not yet completed and such other updation of the tasks are also taken care of in this updation of the browser's local storage.
+ When the link or the file is opened in any other browser then the local storage consisting of the list won't be existing.
+ 
